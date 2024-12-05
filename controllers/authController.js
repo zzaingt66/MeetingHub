@@ -6,14 +6,20 @@ import {
   verifyPassword,
 } from "../utils/authUtils";
 
+
+
+const ADMIN_TOKEN = process.env.ADMIN_TOKEN;
+
+// REGISTRARSE
 export const register = async (req, res) => {
   try {
     const validatedData = userSchema.parse(req.body);
-    const { name, email, password } = validatedData;
-
+    const { name, email, password, adminToken } = validatedData;
     const hashedPassword = await hashPassword(password);
 
-    const user = new User({ name, email, password: hashedPassword });
+    const role = adminToken === ADMIN_TOKEN ? "admin" : "client";
+
+    const user = new User({ name, email, password: hashedPassword, role });
     await user.save();
 
     const token = generateToken(user._id);
@@ -22,7 +28,12 @@ export const register = async (req, res) => {
     res.status(201).json({
       message: "Usuario registrado exitosamente",
       token,
-      user: { id: user._id, name: user.name, email: user.email },
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
     });
   } catch (error) {
     console.error("Error en el registro:", error);
@@ -30,6 +41,7 @@ export const register = async (req, res) => {
   }
 };
 
+// INICIAR SESION
 export const login = async (req, res) => {
   try {
     const validatedData = loginSchema.parse(req.body);
@@ -49,10 +61,21 @@ export const login = async (req, res) => {
 
     res.cookie("token", token, { httpOnly: true });
     res.status(200).json({
-      message: `Bienvenido ${user.name}, te has logeado exitosamente`
+      message: `Bienvenido ${user.name}, te has logeado exitosamente`,
     });
   } catch (error) {
     console.error("Error en el inicio de sesión:", error);
     res.status(500).json({ message: "Error en el servidor" });
+  }
+};
+
+// CERRAR SESION
+export const logout = async (req, res) => {
+  try {
+    res.clearCookie("token", { httpOnly: true });
+    res.status(200).json({ message: "Sesión cerrada exitosamente" });
+  } catch (error) {
+    console.error("Error al cerrar sesión:", error);
+    res.status(500).json({ message: "Error al cerrar sesión" });
   }
 };
