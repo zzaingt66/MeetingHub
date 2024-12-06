@@ -9,7 +9,7 @@ export const userSchema = z.object({
     .regex(/[A-Z]/, "La contraseña debe incluir al menos una letra mayúscula")
     .regex(/[a-z]/, "La contraseña debe incluir al menos una letra minúscula")
     .regex(/\d/, "La contraseña debe incluir al menos un número"),
-  role: z.enum(["admin", "client"]).default("client"),
+  adminToken: z.string().default("client"),
   favoriteRooms: z.array(z.string()).optional(),
   phone: z.string().optional(),
 });

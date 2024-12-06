@@ -8,6 +8,7 @@ import reservationRoutes from './routes/reservationRoutes.js';
 import userRoutes from './routes/userRoutes.js'; */
 import { errorMiddleware } from './middleware/errorMiddleware.js';
 require('dotenv').config()
+
 connectDB();
 
 const app = express();

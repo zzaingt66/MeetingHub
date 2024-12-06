@@ -28,8 +28,7 @@ export const errorMiddleware  = (err, req, res, next) => {
     message = err.message;
   }
 
-  // Environment-specific error handling
-  if (process.env.NODE_ENV === 'development') {
+   if (process.env.NODE_ENV === 'development') {
     res.status(statusCode).json({ message, errors, stack: err.stack });
   } else {
     res.status(statusCode).json({ message, errors });
