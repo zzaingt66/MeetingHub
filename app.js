@@ -8,6 +8,7 @@ import roomRoutes from "./routes/roomRoutes.js";
 /*import reservationRoutes from './routes/reservationRoutes.js';
 import userRoutes from './routes/userRoutes.js'; */
 import { errorMiddleware } from "./middleware/errorMiddleware.js";
+import cookieParser from "cookie-parser";
 
 // COFIGURACION DE DOTENV QUE PERMITE INTERACTUAR CON VAIRALBES DE ENTORNO
 dotenv.config();
@@ -29,6 +30,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(errorMiddleware);
+app.use(cookieParser());
 
 // CONECTION WITH MONGODB ATLAS
 const connectDB = async () => {

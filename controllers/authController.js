@@ -53,14 +53,13 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Credenciales inválidas" });
     }
 
-    const token = generateToken(user._id);
+    const token = generateToken(user);
 
     res.cookie("token", token, { httpOnly: true });
     res.status(200).json({
-      message: `Bienvenido ${user.name}, te has logeado exitosamente`,
+      message: `Bienvenido ${user.name}, ${token} te has logeado exitosamente`,
     });
   } catch (error) {
-    console.error("Error en el inicio de sesión:", error);
     res.status(500).json({ message: "Error en el servidor" });
   }
 };
@@ -68,10 +67,11 @@ export const login = async (req, res) => {
 // CERRAR SESION
 export const logout = async (req, res) => {
   try {
+    const { name } = req.user;
     res.clearCookie("token", { httpOnly: true });
-    res.status(200).json({ message: "Sesión cerrada exitosamente " });
+    res.status(200).json({ message: `Sesión cerrada exitosamente, ${name}` });
   } catch (error) {
-    console.error("Error al cerrar sesión:", error);
     res.status(500).json({ message: "Error al cerrar sesión" });
   }
 };
+
