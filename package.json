@@ -2,7 +2,7 @@
   "name": "backend",
   "module": "app.js",
   "scripts": {
-    "start": "bun --watch run server.js"
+    "start": "bun --watch run app.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

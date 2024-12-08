@@ -15,3 +15,14 @@ export const validateSchema = (schema) => (req, res, next) => {
     next(error);
   }
 };
+
+export const zodValidationMiddleware = (zodSchema) => {
+  return function (next) {
+    try {
+      zodSchema.parse(this);
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
+};

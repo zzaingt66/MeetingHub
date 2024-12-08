@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
-import { reservationSchema } from '../schemas/reservationSchema';
 
-const ReservationSchema = new mongoose.Schema(reservationSchema.shape);
+const ReservationSchema = new mongoose.Schema(
+  {
+    
+  }
+);
 
 export default mongoose.model('Reservation', ReservationSchema);

@@ -6,8 +6,6 @@ import {
   verifyPassword,
 } from "../utils/authUtils";
 
-
-
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN;
 
 // REGISTRARSE
@@ -19,7 +17,6 @@ export const register = async (req, res) => {
 
     const role = adminToken === ADMIN_TOKEN ? "admin" : "client";
 
-
     const user = new User({ name, email, password: hashedPassword, role });
     await user.save();
 
@@ -30,15 +27,13 @@ export const register = async (req, res) => {
       message: "Usuario registrado exitosamente",
       token,
       user: {
-        id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,
       },
     });
   } catch (error) {
-    console.error("Error en el registro:", error);
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ message: "Error en el registro:" }, error);
   }
 };
 
@@ -74,7 +69,7 @@ export const login = async (req, res) => {
 export const logout = async (req, res) => {
   try {
     res.clearCookie("token", { httpOnly: true });
-    res.status(200).json({ message: "Sesión cerrada exitosamente "});
+    res.status(200).json({ message: "Sesión cerrada exitosamente " });
   } catch (error) {
     console.error("Error al cerrar sesión:", error);
     res.status(500).json({ message: "Error al cerrar sesión" });

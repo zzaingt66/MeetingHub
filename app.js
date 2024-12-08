@@ -1,32 +1,60 @@
-import express from 'express';
-import cors from 'cors'
-import morgan from 'morgan';
-import {connectDB} from './config/db.js'
-import authRoutes from './routes/authRoutes.js';
-/* import roomRoutes from './routes/roomRoutes.js';
-import reservationRoutes from './routes/reservationRoutes.js';
+import express from "express";
+import cors from "cors";
+import morgan from "morgan";
+import authRoutes from "./routes/authRoutes.js";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import roomRoutes from "./routes/roomRoutes.js";
+/*import reservationRoutes from './routes/reservationRoutes.js';
 import userRoutes from './routes/userRoutes.js'; */
-import { errorMiddleware } from './middleware/errorMiddleware.js';
-require('dotenv').config()
+import { errorMiddleware } from "./middleware/errorMiddleware.js";
 
-connectDB();
+// COFIGURACION DE DOTENV QUE PERMITE INTERACTUAR CON VAIRALBES DE ENTORNO
+dotenv.config();
 
+// VARIABLES DE ENTORNO
+const PORT = process.env.PORT;
+const MONGODB_URI = process.env.MONGODB_URI;
+
+// INSTANCIADO EXPRESS EN APP
 const app = express();
+
+// MIDDLEWARES FOR CORS, BODY-PARSER, MORGAN FOR REGISTRO IN CONSOLE AND THE ERROR MIDDLEWARE
 const corsOptions = {
-    origin: process.env.FRONTEND_URL, 
-    optionsSuccessStatus: 204,
+  origin: process.env.FRONTEND_URL,
+  optionsSuccessStatus: 204,
 };
 
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use(morgan('dev'));
-app.use(express.json())
-
-app.use('/api/auth', authRoutes);
-/*   app.use('/api/rooms', roomRoutes);
-app.use('/api/reservations', reservationRoutes);
-app.use('/api/users', userRoutes); */
-
+app.use(morgan("dev"));
 app.use(errorMiddleware);
 
-export default app;
+// CONECTION WITH MONGODB ATLAS
+const connectDB = async () => {
+  try {
+    await mongoose.connect(MONGODB_URI);
+    console.log("Conexión exitosa a la base de datos");
+  } catch (error) {
+    console.error("Error al conectar a la base de datos:", error.message);
+    process.exit(1);
+  }
+};
+mongoose.connection.on("disconneted", () => {
+  console.log("MongoDB disconneted");
+});
+
+mongoose.connection.on("connected", () => {
+  console.log("MongoDB connected");
+});
+
+// CONEXION AL PUERTO Y EJECUCION DE LA CONEXION A LA DB, SE HACE AQUI
+app.listen(PORT, () => {
+  connectDB();
+  console.log(`Server running on http://localhost:${PORT}`);
+});
+
+app.use("/api/auth", authRoutes);
+app.use("/api/rooms", roomRoutes);
+/* app.use('/api/reservations', reservationRoutes);
+app.use('/api/users', userRoutes); */
