@@ -1,38 +1,10 @@
-import { ZodError } from 'zod';
-
-export const errorMiddleware  = (err, req, res, next) => {
-  if (res.headersSent) {
-    return next(err);
-  }
-
-  let statusCode = 500;
-  let message = 'Internal Server Error';
-  let errors = [];
-
-  if (err instanceof ZodError) {
-    statusCode = 400;
-    message = 'Datos inválidos';
-    errors = err.errors.map((error) => ({
-      path: error.path.join('.'),
-      message: error.message,
-    }));
-  } else if (err.name === 'ValidationError') {
-    statusCode = 400;
-    message = 'Datos inválidos';
-    errors = Object.values(err.errors).map((error) => ({
-      path: error.path,
-      message: error.message,
-    }));
-  } else if (err.statusCode) {
-    statusCode = err.statusCode;
-    message = err.message;
-  }
-
-   if (process.env.NODE_ENV === 'development') {
-    res.status(statusCode).json({ message, errors, stack: err.stack });
-  } else {
-    res.status(statusCode).json({ message, errors });
-  }
-
-  console.error(err);
+export const errorMiddleware = (err, req, res, next) => {
+  const errorStatus = err.status || 500;
+  const errorMessage = err.message || "Upss!";
+  return res.status(errorStatus).json({
+    success: false,
+    status: errorStatus,
+    message: errorMessage,
+    stack: err.stack,
+  });
 };

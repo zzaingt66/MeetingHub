@@ -5,8 +5,8 @@ import authRoutes from "./routes/authRoutes.js";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import roomRoutes from "./routes/roomRoutes.js";
-/*import reservationRoutes from './routes/reservationRoutes.js';
-import userRoutes from './routes/userRoutes.js'; */
+import reservationRoutes from './routes/reservationRoutes.js';
+import userRoutes from './routes/userRoutes.js'; 
 import { errorMiddleware } from "./middleware/errorMiddleware.js";
 import cookieParser from "cookie-parser";
 
@@ -46,9 +46,7 @@ mongoose.connection.on("disconneted", () => {
   console.log("MongoDB disconneted");
 });
 
-mongoose.connection.on("connected", () => {
-  console.log("MongoDB connected");
-});
+
 
 // CONEXION AL PUERTO Y EJECUCION DE LA CONEXION A LA DB, SE HACE AQUI
 app.listen(PORT, () => {
@@ -58,5 +56,5 @@ app.listen(PORT, () => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/rooms", roomRoutes);
-/* app.use('/api/reservations', reservationRoutes);
-app.use('/api/users', userRoutes); */
+app.use('/api/reservations', reservationRoutes);
+app.use('/api/users', userRoutes); 

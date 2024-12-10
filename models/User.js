@@ -15,6 +15,6 @@ const mongooseSchema = new mongoose.Schema(
 );
 
 mongooseSchema.pre("save", zodValidationMiddleware(userSchema));
-const User = mongoose.model("User", mongooseSchema);
+const User = mongoose.model("User", mongooseSchema); 
 
 export { User };

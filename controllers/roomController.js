@@ -3,16 +3,15 @@ import { Room } from "../models/Room";
 
 export const createRoom = async (req, res) => {
   try {
-    const validatedData = roomSchema.parse(req.body); // Validación con Zod
-    const room = new Room(validatedData); // Crea la sala con el modelo de Mongoose
-    const roomSaved = await room.save(); // Guarda en la DB
+    const validatedData = roomSchema.parse(req.body);
+    const room = new Room(validatedData);
+    const roomSaved = await room.save();
 
     res.status(201).json({ 
       message: "Se ha creado la sala correctamente!", 
       room: roomSaved 
     });
   } catch (err) {
-    console.error("Error al crear sala:", err);
     res.status(400).json({ 
       message: "Ocurrió un error creando la sala", 
       error: err.message 
@@ -22,14 +21,17 @@ export const createRoom = async (req, res) => {
 
 export const updateRoom = async (req, res) => {
   const id = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "ID de sala inválido" });
+  }
   try {
-    const roomUpdated = await Room.findByIdAndUpdate(id, req.body, { new: true });
+    const validatedData = roomSchema.partial().parse(req.body);
+    const roomUpdated = await Room.findByIdAndUpdate(id, validatedData, { new: true });
     res.status(200).json({ 
       message: "Se ha actualizado la sala correctamente!", 
       room: roomUpdated 
     });
   } catch (err) {
-    console.error("Error al actualizar sala:", err);
     res.status(400).json({ 
       message: "Ocurrió un error actualizando la sala", 
       error: err.message 
@@ -48,7 +50,6 @@ export const getRoomById = async (req, res) => {
       room 
     });
   } catch (err) {
-    console.error("Error al obtener sala por ID:", err);
     res.status(404).json({ 
       message: "No se pudo encontrar la sala", 
       error: err.message 

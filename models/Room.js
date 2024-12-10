@@ -1,62 +1,54 @@
 import mongoose from "mongoose";
 
-const roomSchema = new mongoose.Schema({
-  photos: {
-    type: [String],
-    required: true,
-  },
-  name: {
-    type: String,
-    required: true,
-    minlength: 2,
-  },
-  capacity: {
-    type: Number,
-    required: true,
-    min: 2, 
-  },
-  place: {
-    type: String,
-    required: true,
-  },
-  address: {
-    street: {
+const RoomSchema = new mongoose.Schema(
+  {
+    name: {
       type: String,
       required: true,
-      minlength: 3,
-      maxlength: 50,
     },
-    number: {
-      type: Number,
+    roomNumber: {
+      type: String,
       required: true,
     },
     city: {
       type: String,
       required: true,
-      minlength: 3,
-      maxlength: 50,
     },
+    address: {
+      type: String,
+      required: true,
+    },
+    photos: {
+      type: [String],
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    equipment: {
+      type: [String],
+    },
+    pricePerHour: {
+      type: Number,
+      required: true,
+    },
+    maxCapacity: {
+      type: Number,
+      required: true,
+    },
+    featured: {
+      type: Boolean,
+      default: false,
+    },
+    bookings: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Reservation",
+      },
+    ],
   },
-  isActive: {
-    type: Boolean,
-    default: true, 
-  },
-  desc: {
-    type: String,
-    required: true,
-    minlength: 3,
-  },
-  reservations: {
-    type: [mongoose.Schema.Types.ObjectId], 
-    ref: "Reservation",
-    default: [],
-  },
-  rating: {
-    type: Number,
-    min: 1,
-    max: 5,
-    default: 1,
-  },
-});
+  { timestamps: true }
+);
 
-export const Room = mongoose.model("Room", roomSchema);
+export const Room = mongoose.model("Room", RoomSchema);

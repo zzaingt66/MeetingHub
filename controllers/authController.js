@@ -9,7 +9,7 @@ import {
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN;
 
 // REGISTRARSE
-export const register = async (req, res) => {
+export const register = async (req, res, next) => {
   try {
     const validatedData = userSchema.parse(req.body);
     const { name, email, password, adminToken } = validatedData;
@@ -17,28 +17,26 @@ export const register = async (req, res) => {
 
     const role = adminToken === ADMIN_TOKEN ? "admin" : "client";
 
-    const user = new User({ name, email, password: hashedPassword, role });
-    await user.save();
+    const createdUser = new User({ name, email, password: hashedPassword, role });
+    await createdUser.save();
 
-    const token = generateToken(user._id);
+    const token = generateToken(createdUser);
 
-    res.cookie("token", token, { httpOnly: true });
+    res.cookie("access_token", token, { httpOnly: true });
     res.status(201).json({
       message: "Usuario registrado exitosamente",
-      token,
       user: {
-        name: user.name,
-        email: user.email,
-        role: user.role,
+        name: createdUser.name,
+        email: createdUser.email,
       },
     });
   } catch (error) {
-    res.status(400).json({ message: "Error en el registro:" }, error);
+    next(error)
   }
 };
 
 // INICIAR SESION
-export const login = async (req, res) => {
+export const login = async (req, res, next) => {
   try {
     const validatedData = loginSchema.parse(req.body);
     const { email, password } = validatedData;
@@ -48,30 +46,30 @@ export const login = async (req, res) => {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    const isMatch = await verifyPassword(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Credenciales inválidas" });
+    const isPasswordCorrect = await verifyPassword(password, user.password);
+    if (!isPasswordCorrect) {
+      return res.status(400).json({ message: "Contraseña incorrecta!" });
     }
 
     const token = generateToken(user);
 
     res.cookie("token", token, { httpOnly: true });
     res.status(200).json({
-      message: `Bienvenido ${user.name}, ${token} te has logeado exitosamente`,
+      message: `Bienvenido, ${user.name}.`,
     });
   } catch (error) {
-    res.status(500).json({ message: "Error en el servidor" });
+    next(error)
   }
 };
 
 // CERRAR SESION
-export const logout = async (req, res) => {
+export const logout = async (req, res, next) => {
   try {
     const { name } = req.user;
     res.clearCookie("token", { httpOnly: true });
     res.status(200).json({ message: `Sesión cerrada exitosamente, ${name}` });
   } catch (error) {
-    res.status(500).json({ message: "Error al cerrar sesión" });
+    next(error)
   }
 };
 
