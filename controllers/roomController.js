@@ -1,6 +1,6 @@
 import { roomSchema } from "../schemas/roomSchema";
 import { Room } from "../models/Room";
-
+import mongoose from "mongoose"
 export const createRoom = async (req, res) => {
   try {
     const validatedData = roomSchema.parse(req.body);

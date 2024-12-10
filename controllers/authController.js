@@ -28,6 +28,7 @@ export const register = async (req, res, next) => {
       user: {
         name: createdUser.name,
         email: createdUser.email,
+        role: createdUser.role
       },
     });
   } catch (error) {
