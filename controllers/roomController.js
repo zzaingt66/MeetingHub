@@ -1,5 +1,5 @@
-import { roomSchema } from "../schemas/roomSchema";
-import { Room } from "../models/Room";
+import { roomSchema } from "../schemas/roomSchema.js";
+import { Room } from "../models/Room.js";
 import mongoose from "mongoose"
 export const createRoom = async (req, res) => {
   try {

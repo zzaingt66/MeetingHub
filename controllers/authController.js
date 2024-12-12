@@ -1,10 +1,10 @@
-import { userSchema, loginSchema } from "../schemas/userSchema";
-import { User } from "../models/User";
+import { userSchema, loginSchema } from "../schemas/userSchema.js";
+import { User } from "../models/User.js";
 import {
   hashPassword,
   generateToken,
   verifyPassword,
-} from "../utils/authUtils";
+} from "../utils/authUtils.js";
 
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN;
 

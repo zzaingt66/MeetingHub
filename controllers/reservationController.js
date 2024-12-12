@@ -1,7 +1,7 @@
-import { Reservation } from "../models/Reservation";
-import { Room } from "../models/Room";
-import { reservationSchema } from "../schemas/reservationSchema";
-import { createError } from "../utils/erros";
+import { Reservation } from "../models/Reservation.js";
+import { Room } from "../models/Room.js";
+import { reservationSchema } from "../schemas/reservationSchema.js";
+import { createError } from "../utils/erros.js";
 
 export const getReservations = async (req, res, next) => {
   try {

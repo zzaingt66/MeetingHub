@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { userSchema } from "../schemas/userSchema";
-import { zodValidationMiddleware } from "../middleware/validateMiddleware";
+import { userSchema } from "../schemas/userSchema.js";
+import { zodValidationMiddleware } from "../middleware/validateMiddleware.js";
 
 const mongooseSchema = new mongoose.Schema(
   {
