@@ -53,11 +53,9 @@ export const login = async (req, res, next) => {
     }
 
     const token = generateToken(user);
-
+    console.log(user)
     res.cookie("token", token, { httpOnly: true });
-    res.status(200).json({
-      message: `Bienvenido, ${user.name}.`,
-    });
+    res.status(200).json(user);
   } catch (error) {
     next(error)
   }
