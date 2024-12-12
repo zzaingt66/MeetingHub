@@ -29,7 +29,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(morgan("dev"));
-app.use(errorMiddleware);
 app.use(cookieParser());
 
 // CONECTION WITH MONGODB ATLAS
@@ -42,9 +41,10 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
-mongoose.connection.on("disconneted", () => {
-  console.log("MongoDB disconneted");
+mongoose.connection.on("disconnected", () => {
+  console.log("MongoDB disconnected");
 });
+
 
 
 
@@ -58,5 +58,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/rooms", roomRoutes);
 app.use('/api/reservations', reservationRoutes);
 app.use('/api/users', userRoutes); 
+
+app.use(errorMiddleware);
+
 
 export default app
