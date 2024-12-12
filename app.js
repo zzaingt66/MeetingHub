@@ -58,3 +58,5 @@ app.use("/api/auth", authRoutes);
 app.use("/api/rooms", roomRoutes);
 app.use('/api/reservations', reservationRoutes);
 app.use('/api/users', userRoutes); 
+
+export default app
