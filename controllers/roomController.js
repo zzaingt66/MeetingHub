@@ -60,10 +60,7 @@ export const getRoomById = async (req, res) => {
 export const getRooms = async (req, res) => {
   try {
     const rooms = await Room.find();
-    res.status(200).json({ 
-      message: "Se encontraron las salas correctamente", 
-      rooms 
-    });
+    res.status(200).json(rooms);
   } catch (err) {
     res.status(404).json({ 
       message: "No se pudieron encontrar las salas", 
