@@ -6,9 +6,9 @@ import { createError } from "../utils/erros.js";
 export const getReservations = async (req, res, next) => {
   try {
     let reservations;
-    
+
     // If user is admin, show all reservations
-    if (req.user.role === 'admin') {
+    if (req.user.role === "admin") {
       reservations = await Reservation.find()
         .populate("roomId", "name description pricePerHour maxCapacity")
         .populate("userId", "name email");
@@ -30,21 +30,25 @@ export const getReservations = async (req, res, next) => {
 
 export const createReservation = async (req, res, next) => {
   try {
-    // Override userId with authenticated user's ID
     const reservationData = {
       ...req.body,
-      userId: req.user.id
+      userId: req.user.id,
     };
 
     const parsedData = reservationSchema.parse(reservationData);
-    
+
     const room = await Room.findById(parsedData.roomId);
     if (!room) {
       return next(createError(404, "Sala no encontrada"));
     }
 
     if (parsedData.numberOfPeople > room.maxCapacity) {
-      return next(createError(400, `La capacidad máxima de la sala es ${room.maxCapacity} personas.`));
+      return next(
+        createError(
+          400,
+          `La capacidad máxima de la sala es ${room.maxCapacity} personas.`
+        )
+      );
     }
 
     const startDateTime = new Date(parsedData.date);
@@ -70,7 +74,9 @@ export const createReservation = async (req, res, next) => {
     });
 
     if (existingReservation) {
-      return next(createError(400, "La sala ya está reservada para esas fechas y horas."));
+      return next(
+        createError(400, "La sala ya está reservada para esas fechas y horas.")
+      );
     }
 
     const reservation = new Reservation({
@@ -102,15 +108,15 @@ export const createReservation = async (req, res, next) => {
 export const getReservationById = async (req, res, next) => {
   try {
     let reservation;
-    
-    if (req.user.role === 'admin') {
+
+    if (req.user.role === "admin") {
       reservation = await Reservation.findById(req.params.id)
         .populate("roomId")
         .populate("userId");
     } else {
       reservation = await Reservation.findOne({
         _id: req.params.id,
-        userId: req.user.id
+        userId: req.user.id,
       })
         .populate("roomId")
         .populate("userId");
@@ -132,10 +138,10 @@ export const getReservationById = async (req, res, next) => {
 export const updateReservation = async (req, res, next) => {
   try {
     const validatedData = reservationSchema.partial().parse(req.body);
-    
+
     let reservation;
-    
-    if (req.user.role === 'admin') {
+
+    if (req.user.role === "admin") {
       reservation = await Reservation.findByIdAndUpdate(
         req.params.id,
         validatedData,
@@ -146,9 +152,9 @@ export const updateReservation = async (req, res, next) => {
     } else {
       // If regular user, only update their own reservations
       reservation = await Reservation.findOneAndUpdate(
-        { 
-          _id: req.params.id, 
-          userId: req.user.id 
+        {
+          _id: req.params.id,
+          userId: req.user.id,
         },
         validatedData,
         { new: true }
@@ -173,15 +179,15 @@ export const updateReservation = async (req, res, next) => {
 export const deleteReservation = async (req, res, next) => {
   try {
     let deletedReservation;
-    
+
     // If admin, can delete any reservation
-    if (req.user.role === 'admin') {
+    if (req.user.role === "admin") {
       deletedReservation = await Reservation.findByIdAndDelete(req.params.id);
     } else {
       // If regular user, only delete their own reservations
       deletedReservation = await Reservation.findOneAndDelete({
         _id: req.params.id,
-        userId: req.user.id
+        userId: req.user.id,
       });
     }
 

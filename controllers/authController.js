@@ -57,9 +57,8 @@ export const login = async (req, res, next) => {
     }
 
     const token = generateToken(user);
-    console.log(user);
     res.cookie("token", token, { httpOnly: true });
-    res.status(200).json(user);
+    res.status(200).json(...user.toObject(), token);
   } catch (error) {
     next(error);
   }
