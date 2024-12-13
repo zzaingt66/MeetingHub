@@ -30,6 +30,10 @@ export const getReservations = async (req, res, next) => {
 
 export const createReservation = async (req, res, next) => {
   try {
+    if (!req.user) {
+      return next(createError(401, "Usuario no autenticado"));
+    }
+
     const reservationData = {
       ...req.body,
       userId: req.user.id,
