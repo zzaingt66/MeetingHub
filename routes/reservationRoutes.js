@@ -11,7 +11,7 @@ import {
 const router = express.Router();
 
 router.get("/", authMiddleware, getReservations);
-router.post("/", createReservation);
+router.post("/", authMiddleware, createReservation);
 router.get("/:id", authMiddleware, getReservationById);
 router.put("/:id", authMiddleware, updateReservation);
 router.delete("/:id", authMiddleware, deleteReservation);
