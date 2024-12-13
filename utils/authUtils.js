@@ -4,10 +4,17 @@ import jwt from "jsonwebtoken";
 const JWT_SECRET = process.env.JWT_SECRET;
 
 export const generateToken = (user) => {
-  return jwt.sign(
-    { id: user._id, role: user.role, name: user.name },
-    JWT_SECRET
+  const token = jwt.sign(
+    {
+      id: user._id,
+      email: user.email,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" }
   );
+
+  console.log("Generated Token:", token);
+  return token;
 };
 
 export const hashPassword = async (password) => {
