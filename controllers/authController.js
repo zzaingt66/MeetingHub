@@ -14,10 +14,14 @@ export const register = async (req, res, next) => {
     const validatedData = userSchema.parse(req.body);
     const { name, email, password, adminToken } = validatedData;
     const hashedPassword = await hashPassword(password);
-
     const role = adminToken === ADMIN_TOKEN ? "admin" : "client";
 
-    const createdUser = new User({ name, email, password: hashedPassword, role });
+    const createdUser = new User({
+      name,
+      email,
+      password: hashedPassword,
+      role,
+    });
     await createdUser.save();
 
     const token = generateToken(createdUser);
@@ -28,11 +32,11 @@ export const register = async (req, res, next) => {
       user: {
         name: createdUser.name,
         email: createdUser.email,
-        role: createdUser.role
+        role: createdUser.role,
       },
     });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
@@ -53,11 +57,11 @@ export const login = async (req, res, next) => {
     }
 
     const token = generateToken(user);
-    console.log(user)
+    console.log(user);
     res.cookie("token", token, { httpOnly: true });
     res.status(200).json(user);
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
@@ -68,7 +72,6 @@ export const logout = async (req, res, next) => {
     res.clearCookie("token", { httpOnly: true });
     res.status(200).json({ message: `Sesión cerrada exitosamente, ${name}` });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
-

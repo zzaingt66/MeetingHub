@@ -5,8 +5,8 @@ import authRoutes from "./routes/authRoutes.js";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import roomRoutes from "./routes/roomRoutes.js";
-import reservationRoutes from './routes/reservationRoutes.js';
-import userRoutes from './routes/userRoutes.js'; 
+import reservationRoutes from "./routes/reservationRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import { errorMiddleware } from "./middleware/errorMiddleware.js";
 import cookieParser from "cookie-parser";
 
@@ -45,21 +45,16 @@ mongoose.connection.on("disconnected", () => {
   console.log("MongoDB disconnected");
 });
 
-
-
-
 // CONEXION AL PUERTO Y EJECUCION DE LA CONEXION A LA DB, SE HACE AQUI
 app.listen(PORT, () => {
   connectDB();
-  console.log(`Server running on http://localhost:${PORT}`);
 });
 
 app.use("/api/auth", authRoutes);
 app.use("/api/rooms", roomRoutes);
-app.use('/api/reservations', reservationRoutes);
-app.use('/api/users', userRoutes); 
+app.use("/api/reservations", reservationRoutes);
+app.use("/api/users", userRoutes);
 
 app.use(errorMiddleware);
 
-
-export default app
+export default app;
