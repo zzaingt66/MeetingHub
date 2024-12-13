@@ -9,8 +9,7 @@ export const generateToken = (user) => {
       id: user._id,
       email: user.email,
     },
-    process.env.JWT_SECRET,
-    { expiresIn: "1h" }
+    JWT_SECRET
   );
 
   console.log("Generated Token:", token);
