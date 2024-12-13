@@ -10,7 +10,8 @@ export const generateToken = (user) => {
       email: user.email,
       role: user.role || "client",
     },
-    JWT_SECRET
+    JWT_SECRET,
+    { expiresIn: "1h" } // Add an expiration time
   );
 
   console.log("Generated Token:", token);
